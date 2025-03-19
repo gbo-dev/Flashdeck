@@ -27,6 +27,7 @@ Perfect for anyone looking to improve their memory and knowledge quickly using a
 ## 🚧 TODO List
 
 Here are some tasks that need to be completed:
+- [ ] Allow code formatting in cards
 - [ ] Implement settings logic
   - [ ] Colorscheme: customizable colors
   - [ ] Timer 
