@@ -80,35 +80,35 @@ func (m model) ViewSettings() string {
 
 func (m model) ViewDeckList() string {
 
-		if m.deckManager.GetNumDecks() == 0 {
+	if m.deckManager.GetNumDecks() == 0 {
 
-			title := TitleStyle.MarginLeft(2).Render("Terminal Flashcards")
-			message := AppStyle.Render("No decks available.\n\nCreate your first deck by pressing 'n'.")
+		title := TitleStyle.MarginLeft(2).Render("Terminal Flashcards")
+		message := AppStyle.Render("No decks available.\n\nCreate your first deck by pressing 'n'.")
 
-			helpContent := m.getHelpView()
+		helpContent := m.getHelpView()
 
-			return lipgloss.JoinVertical(
-				lipgloss.Left,
-				title,
-				message,
-				helpContent,
-			)
+		return lipgloss.JoinVertical(
+			lipgloss.Left,
+			title,
+			message,
+			helpContent,
+		)
 
-		} else {
-			helpHeight := lipgloss.Height(m.getHelpView())
-			listHeight := m.height - helpHeight - 4 // Account for padding and margins
+	} else {
+		helpHeight := lipgloss.Height(m.getHelpView())
+		listHeight := m.height - helpHeight - 4 // Account for padding and margins
 
-			m.list.SetHeight(listHeight)
+		m.list.SetHeight(listHeight)
 
-			listContent := m.list.View()
-			helpContent := m.getHelpView()
+		listContent := m.list.View()
+		helpContent := m.getHelpView()
 
-			return lipgloss.JoinVertical(
-				lipgloss.Left,
-				listContent,
-				helpContent,
-			)
-		}
+		return lipgloss.JoinVertical(
+			lipgloss.Left,
+			listContent,
+			helpContent,
+		)
+	}
 }
 
 func (m model) ViewCard() string {
