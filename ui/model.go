@@ -57,7 +57,6 @@ type model struct {
 	deckToDelete *data.Deck
 }
 
-
 type deckItem struct {
 	id    uuid.UUID
 	name  string
@@ -68,7 +67,6 @@ func (i deckItem) Title() string       { return i.name }
 func (i deckItem) ID() uuid.UUID       { return i.id }
 func (i deckItem) Description() string { return fmt.Sprintf("%d cards", i.count) }
 func (i deckItem) FilterValue() string { return i.name }
-
 
 func newTextInput(placeholder string, charLimit int, width int) textinput.Model {
 	ti := textinput.New()

@@ -47,7 +47,7 @@ func (dm *DeckManager) GetAllDecks() []*Deck {
 }
 
 func (dm *DeckManager) GetNumDecks() int {
-	return len(dm.decks) 
+	return len(dm.decks)
 }
 
 // AddDeck adds a deck to DeckManager and in storage
