@@ -12,7 +12,7 @@ Perfect for anyone looking to improve their memory and knowledge quickly using a
 <img alt="Flashdeck walkthrough" src="https://github.com/user-attachments/assets/4030e90f-939e-411c-9616-b0ca8ccbb9b8" width=700>
 
 #### Creating decks and cards
-<img alt="Flashdeck walkthrough" src="https://github.com/user-attachments/assets/4d00a33b-d92f-4a4a-a9eb-6b4274cccbaa" width=700>
+<img alt="Flashdeck walkthrough" src="https://github.com/user-attachments/assets/3084d379-2fe4-4c54-9de2-0f77f91961e1" width=700>
 
 
 <!---
