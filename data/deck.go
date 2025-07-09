@@ -2,6 +2,9 @@
 package data
 
 import (
+	"math/rand"
+	"time"
+
 	"github.com/google/uuid"
 )
 
@@ -84,4 +87,23 @@ func (d *Deck) CurrentCard() *Card {
 	}
 
 	return &d.Cards[d.CurrentID]
+}
+
+// ShuffleCards randomizes the order of cards in the deck
+func (d *Deck) ShuffleCards() {
+	if len(d.Cards) <= 1 {
+		return
+	}
+	
+	// Use current time as seed for randomization
+	rand.Seed(time.Now().UnixNano())
+	
+	// Fisher-Yates shuffle algorithm
+	for i := len(d.Cards) - 1; i > 0; i-- {
+		j := rand.Intn(i + 1)
+		d.Cards[i], d.Cards[j] = d.Cards[j], d.Cards[i]
+	}
+	
+	// Reset current position to start
+	d.CurrentID = 0
 }

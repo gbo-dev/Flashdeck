@@ -4,6 +4,7 @@ package ui
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/lipgloss"
@@ -45,6 +46,7 @@ func (m model) ViewSettings() string {
 		fmt.Sprintf("Chaos Mode: %s", formatBoolSetting(m.settings.ChaosMode)),
 		fmt.Sprintf("Show Timer: %s", formatBoolSetting(m.settings.ShowTimer)),
 		fmt.Sprintf("Sound Effects: %s", formatBoolSetting(m.settings.Audio)),
+		fmt.Sprintf("Random Order: %s", formatBoolSetting(m.settings.RandomOrder)),
 	}
 
 	numSettings := len(items)
@@ -140,6 +142,14 @@ func (m model) ViewCard() string {
 	counterView := CardCounterView(m.currentDeck.CurrentID+1, len(m.currentDeck.Cards))
 	deckTitle := TitleStyle.Render(m.currentDeck.Name)
 
+	// Add timer display if enabled
+	var timerView string
+	if m.settings.ShowTimer && m.timerRunning {
+		// Update timer elapsed time
+		currentElapsed := time.Since(m.timerStart)
+		timerView = GetTimerView(currentElapsed)
+	}
+
 	if m.mode == ModeConfirmRemoveCard {
 		// Create a warning box with thick red borders
 		warningStyle := WarningStyleContainer.
@@ -171,12 +181,17 @@ func (m model) ViewCard() string {
 
 	cardContent := CardContentView(card.Question, card.Answer, card.Tags, m.showAnswer)
 
+	// Build content with optional timer
+	var contentParts []string
+	contentParts = append(contentParts, counterView)
+	if timerView != "" {
+		contentParts = append(contentParts, timerView)
+	}
+	contentParts = append(contentParts, deckTitle, cardContent, helpContent)
+
 	content := lipgloss.JoinVertical(
 		lipgloss.Center,
-		counterView,
-		deckTitle,
-		cardContent,
-		helpContent,
+		contentParts...,
 	)
 	return content
 }

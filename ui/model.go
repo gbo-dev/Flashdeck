@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"go-flashcards/data"
 
@@ -43,6 +44,11 @@ type model struct {
 	width       int
 	height      int
 	settings    data.Settings
+
+	// Timer functionality
+	timerStart   time.Time
+	timerElapsed time.Duration
+	timerRunning bool
 
 	// Deck creation
 	newDeckInput textinput.Model
@@ -145,6 +151,9 @@ func NewModel(deckManager *data.DeckManager) model {
 		width:         80,
 		height:        24,
 		settings:      settings,
+		timerStart:    time.Now(),
+		timerElapsed:  0,
+		timerRunning:  false,
 		newDeckInput:  newDeckInput,
 		questionInput: questionInput,
 		answerInput:   answerInput,
@@ -195,6 +204,8 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					m.settings.ShowTimer = !m.settings.ShowTimer
 				case 2:
 					m.settings.Audio = !m.settings.Audio
+				case 3:
+					m.settings.RandomOrder = !m.settings.RandomOrder
 				}
 				if err := data.SaveSettings(m.settings); err != nil {
 					log.Printf("Error saving settings: %v", err)
@@ -231,8 +242,20 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				if ok {
 					m.currentDeck = m.deckManager.GetDeckByID(i.id)
 					if m.currentDeck != nil {
+						// Apply random order if enabled
+						if m.settings.RandomOrder {
+							m.currentDeck.ShuffleCards()
+							data.SaveDeck(*m.currentDeck)
+						}
+						
 						m.mode = ModeViewCard
 						m.showAnswer = false
+						// Start timer when entering card view
+						if m.settings.ShowTimer {
+							m.timerStart = time.Now()
+							m.timerRunning = true
+							m.timerElapsed = 0
+						}
 					}
 				}
 			}
@@ -262,11 +285,21 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 					log.Printf("Error selecting next card: %v", err)
 				}
 				m.showAnswer = false
+				// Reset timer for new card
+				if m.settings.ShowTimer && m.timerRunning {
+					m.timerStart = time.Now()
+					m.timerElapsed = 0
+				}
 			case key.Matches(msg, m.keys.Prev):
 				if err := m.currentDeck.PrevCard(); err != nil {
 					log.Printf("Error selecting previous card: %v", err)
 				}
 				m.showAnswer = false
+				// Reset timer for new card
+				if m.settings.ShowTimer && m.timerRunning {
+					m.timerStart = time.Now()
+					m.timerElapsed = 0
+				}
 			case key.Matches(msg, m.keys.CreateCard):
 				// Switch to card creation mode
 				m.mode = ModeCreateCard

@@ -4,6 +4,7 @@ package ui
 import (
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/charmbracelet/lipgloss"
 )
@@ -138,6 +139,19 @@ var (
 			Foreground(lipgloss.Color("#888888")).
 			Align(lipgloss.Center).
 			Width(60)
+
+	// Code formatting styles
+	CodeBlockStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#98FB98")).
+			Background(lipgloss.Color("#2F2F2F")).
+			Padding(0, 1).
+			MarginTop(1).
+			MarginBottom(1)
+
+	InlineCodeStyle = lipgloss.NewStyle().
+			Foreground(lipgloss.Color("#FFB347")).
+			Background(lipgloss.Color("#2F2F2F")).
+			Padding(0, 1)
 )
 
 // GetCardCounterView renders the card counter.
@@ -146,11 +160,69 @@ func CardCounterView(current, total int) string {
 	return CounterStyle.Render(counter)
 }
 
+// GetTimerView renders the timer display.
+func GetTimerView(elapsed time.Duration) string {
+	seconds := int(elapsed.Seconds())
+	minutes := seconds / 60
+	seconds = seconds % 60
+	
+	timerText := fmt.Sprintf("⏱️  %02d:%02d", minutes, seconds)
+	return lipgloss.NewStyle().
+		Foreground(lipgloss.Color("#88D4E6")).
+		Bold(true).
+		Align(lipgloss.Center).
+		Render(timerText)
+}
+
+// formatCodeBlocks processes text to highlight code blocks and inline code
+func formatCodeBlocks(text string) string {
+	// Handle code blocks (```code```)
+	for strings.Contains(text, "```") {
+		start := strings.Index(text, "```")
+		if start == -1 {
+			break
+		}
+		end := strings.Index(text[start+3:], "```")
+		if end == -1 {
+			break
+		}
+		end += start + 3
+		
+		codeContent := text[start+3 : end]
+		formattedCode := CodeBlockStyle.Render(codeContent)
+		text = text[:start] + formattedCode + text[end+3:]
+	}
+	
+	// Handle inline code (`code`)
+	for strings.Contains(text, "`") {
+		start := strings.Index(text, "`")
+		if start == -1 {
+			break
+		}
+		end := strings.Index(text[start+1:], "`")
+		if end == -1 {
+			break
+		}
+		end += start + 1
+		
+		codeContent := text[start+1 : end]
+		formattedCode := InlineCodeStyle.Render(codeContent)
+		text = text[:start] + formattedCode + text[end+1:]
+	}
+	
+	return text
+}
+
 // GetCardContentView renders the flashcard content (question, answer, and tags).
 func CardContentView(question, answer string, tags []string, showAnswer bool) string {
-	content := QuestionStyle.Render(question)
+	// Format code in question
+	formattedQuestion := formatCodeBlocks(question)
+	content := QuestionStyle.Render(formattedQuestion)
+	
 	if showAnswer {
-		content += "\n\n" + AnswerStyle.Render(answer)
+		// Format code in answer
+		formattedAnswer := formatCodeBlocks(answer)
+		content += "\n\n" + AnswerStyle.Render(formattedAnswer)
 	} else {
 		content += "\n\n" + lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#888888")).

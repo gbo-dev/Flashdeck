@@ -3,8 +3,10 @@ package data
 
 import (
 	"fmt"
+	"math/rand"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -115,4 +117,46 @@ func (dm *DeckManager) SortDecksAlphabetical(decks []*Deck) {
 	sort.Slice(decks, func(i, j int) bool {
 		return strings.ToLower(decks[i].Name) < strings.ToLower(decks[j].Name)
 	})
+}
+
+// GetRandomCard returns a random card from any deck (chaos mode)
+func (dm *DeckManager) GetRandomCard() *Card {
+	allCards := []*Card{}
+	
+	// Collect all cards from all decks
+	for _, deck := range dm.decks {
+		for i := range deck.Cards {
+			allCards = append(allCards, &deck.Cards[i])
+		}
+	}
+	
+	if len(allCards) == 0 {
+		return nil
+	}
+	
+	// Return random card
+	rand.Seed(time.Now().UnixNano())
+	randomIndex := rand.Intn(len(allCards))
+	return allCards[randomIndex]
+}
+
+// GetRandomDeckWithCards returns a random deck that has cards
+func (dm *DeckManager) GetRandomDeckWithCards() *Deck {
+	decksWithCards := []*Deck{}
+	
+	// Collect all decks that have cards
+	for _, deck := range dm.decks {
+		if len(deck.Cards) > 0 {
+			decksWithCards = append(decksWithCards, deck)
+		}
+	}
+	
+	if len(decksWithCards) == 0 {
+		return nil
+	}
+	
+	// Return random deck
+	rand.Seed(time.Now().UnixNano())
+	randomIndex := rand.Intn(len(decksWithCards))
+	return decksWithCards[randomIndex]
 }

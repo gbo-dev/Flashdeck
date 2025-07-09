@@ -1,3 +1,4 @@
 chaos_mode: true
-show_timer: false
-audio: true
+show_timer: true
+audio: false
+random_order: false
