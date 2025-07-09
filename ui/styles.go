@@ -226,11 +226,11 @@ func CardContentView(question, answer string, tags []string, showAnswer bool) st
 	} else {
 		content += "\n\n" + lipgloss.NewStyle().
 			Foreground(lipgloss.Color("#888888")).
-			Render("[Press SPACE to reveal the answer]")
+			Render("💭 [Press SPACE to reveal the answer]")
 	}
 
 	if len(tags) > 0 {
-		tagText := "Tags: " + strings.Join(tags, ", ")
+		tagText := "🏷️  Tags: " + strings.Join(tags, ", ")
 		content += "\n\n" + TagStyle.Render(tagText)
 	}
 

@@ -43,10 +43,10 @@ func (m model) ViewSettings() string {
 	var settingsContent strings.Builder
 
 	items := []string{
-		fmt.Sprintf("Chaos Mode: %s", formatBoolSetting(m.settings.ChaosMode)),
-		fmt.Sprintf("Show Timer: %s", formatBoolSetting(m.settings.ShowTimer)),
-		fmt.Sprintf("Sound Effects: %s", formatBoolSetting(m.settings.Audio)),
-		fmt.Sprintf("Random Order: %s", formatBoolSetting(m.settings.RandomOrder)),
+		fmt.Sprintf("🎲 Chaos Mode: %s", formatBoolSetting(m.settings.ChaosMode)),
+		fmt.Sprintf("⏱️  Show Timer: %s", formatBoolSetting(m.settings.ShowTimer)),
+		fmt.Sprintf("🔊 Sound Effects: %s", formatBoolSetting(m.settings.Audio)),
+		fmt.Sprintf("🔀 Random Order: %s", formatBoolSetting(m.settings.RandomOrder)),
 	}
 
 	numSettings := len(items)
@@ -84,8 +84,8 @@ func (m model) ViewDeckList() string {
 
 	if m.deckManager.GetNumDecks() == 0 {
 
-		title := TitleStyle.MarginLeft(2).Render("Terminal Flashcards")
-		message := AppStyle.Render("No decks available.\n\nCreate your first deck by pressing 'n'.")
+		title := TitleStyle.MarginLeft(2).Render("💳 Terminal Flashcards")
+		message := AppStyle.Render("📦 No decks available.\n\n✨ Create your first deck by pressing 'n'.")
 
 		helpContent := m.getHelpView()
 
@@ -120,8 +120,8 @@ func (m model) ViewCard() string {
 		// Custom view for empty decks
 		counterView := CardCounterView(0, 0)
 		title := TitleStyle.Render(m.currentDeck.Name)
-		emptyMessage := CardStyle.Render("This deck has no cards yet.")
-		instructions := Instructions.Render("Press 'c' to create your first card")
+		emptyMessage := CardStyle.Render("📭 This deck has no cards yet.")
+		instructions := Instructions.Render("✨ Press 'c' to create your first card")
 
 		content := lipgloss.JoinVertical(
 			lipgloss.Center,
@@ -198,11 +198,11 @@ func (m model) ViewCard() string {
 
 func (m model) ViewCreateDeck() string {
 
-	title := TitleStyle.MarginLeft(2).Render("Deck creation")
+	title := TitleStyle.MarginLeft(2).Render("📦 Deck creation")
 	helpView := m.getHelpView()
 
 	leftMargin := lipgloss.NewStyle().MarginLeft(2)
-	prompt := leftMargin.Render("Enter deck name:")
+	prompt := leftMargin.Render("✏️  Enter deck name:")
 	inputField := leftMargin.Render(m.newDeckInput.View())
 
 	content := lipgloss.JoinVertical(
@@ -219,18 +219,18 @@ func (m model) ViewCreateDeck() string {
 }
 
 func (m model) ViewCreateCard() string {
-	title := TitleStyle.MarginLeft(2).Render("Add card to " + m.currentDeck.Name)
+	title := TitleStyle.MarginLeft(2).Render("➕ Add card to " + m.currentDeck.Name)
 	helpView := m.getHelpView()
 
 	leftMargin := lipgloss.NewStyle().PaddingLeft(2)
 
-	questionLabel := leftMargin.Render("Question:")
+	questionLabel := leftMargin.Render("❓ Question:")
 	questionInput := leftMargin.Render(m.questionInput.View())
 
-	answerLabel := leftMargin.Render("Answer:")
+	answerLabel := leftMargin.Render("💡 Answer:")
 	answerInput := leftMargin.Render(m.answerInput.View())
 
-	tagsLabel := leftMargin.Render("Tags (comma-separated):")
+	tagsLabel := leftMargin.Render("🏷️  Tags (comma-separated):")
 	tagsInput := leftMargin.Render(m.tagsInput.View())
 
 	content := lipgloss.JoinVertical(

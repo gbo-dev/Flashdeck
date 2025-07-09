@@ -24,6 +24,7 @@ type keyMap struct {
 	DeleteCard key.Binding
 	Yes        key.Binding
 	No         key.Binding
+	Chaos      key.Binding
 }
 
 // Main menu keymap
@@ -92,6 +93,10 @@ var keys = keyMap{
 		key.WithKeys("n"),
 		key.WithHelp("n", "no"),
 	),
+	Chaos: key.NewBinding(
+		key.WithKeys("ctrl+r"),
+		key.WithHelp("ctrl+r", "random card"),
+	),
 }
 
 func (m model) getKeysForMode() []key.Binding {
@@ -125,6 +130,10 @@ func (m model) getKeysForMode() []key.Binding {
 				m.keys.Prev,
 				m.keys.CreateCard,
 				m.keys.DeleteCard,
+			}
+			// Add chaos mode key if enabled
+			if m.settings.ChaosMode {
+				keys = append(keys, m.keys.Chaos)
 			}
 		}
 	case ModeConfirmRemoveCard:

@@ -19,10 +19,11 @@ const (
 const SettingsFile = "settings.yaml"
 
 type Settings struct {
-	ChaosMode   bool `yaml:"chaos_mode"`
-	ShowTimer   bool `yaml:"show_timer"`
-	Audio       bool `yaml:"audio"`
-	RandomOrder bool `yaml:"random_order"`
+	ChaosMode   bool   `yaml:"chaos_mode"`
+	ShowTimer   bool   `yaml:"show_timer"`
+	Audio       bool   `yaml:"audio"`
+	RandomOrder bool   `yaml:"random_order"`
+	ColorTheme  string `yaml:"color_theme"`
 }
 
 func DefaultSettings() Settings {
@@ -31,6 +32,7 @@ func DefaultSettings() Settings {
 		ShowTimer:   false,
 		Audio:       false,
 		RandomOrder: false,
+		ColorTheme:  "default",
 	}
 }
 

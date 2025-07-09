@@ -4,6 +4,7 @@ package ui
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"strings"
 	"time"
 
@@ -311,6 +312,25 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				return m, textinput.Blink
 			case key.Matches(msg, m.keys.DeleteCard):
 				m.mode = ModeConfirmRemoveCard
+			case key.Matches(msg, m.keys.Chaos):
+				// Chaos mode: switch to random deck and random card
+				if m.settings.ChaosMode {
+					randomDeck := m.deckManager.GetRandomDeckWithCards()
+					if randomDeck != nil {
+						m.currentDeck = randomDeck
+						// Set random card position
+						if len(randomDeck.Cards) > 0 {
+							m.currentDeck.CurrentID = rand.Intn(len(randomDeck.Cards))
+							data.SaveDeck(*m.currentDeck)
+						}
+						m.showAnswer = false
+						// Reset timer for new card
+						if m.settings.ShowTimer && m.timerRunning {
+							m.timerStart = time.Now()
+							m.timerElapsed = 0
+						}
+					}
+				}
 			case key.Matches(msg, m.keys.Back):
 				m.mode = ModeDeckList
 			}
